@@ -159,6 +159,8 @@ SELECT COUNT(reportsto) FROM employees
 select categoryID, productID, AVG(UnitPrice)
   from products
   group by categoryID
+  沒有同一組
+  所以不應使用group by 
 
 
 /* 340
