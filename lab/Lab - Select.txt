@@ -156,11 +156,12 @@ SELECT COUNT(reportsto) FROM employees
   下列的指令, 請問錯了嗎?
  */
 
-select categoryID, productID, AVG(UnitPrice)
+select categoryID , productID, AVG(UnitPrice)
   from products
   group by categoryID
-  沒有同一組
-  所以不應使用group by 
+  鍵值衝突
+  如果用categoryID來分配
+  productID（唯一）會不知道怎麼顯示
 
 
 /* 340
@@ -168,7 +169,7 @@ select categoryID, productID, AVG(UnitPrice)
   庫存成本請直接以: 庫存量 * 牌價 (UnitsInStock * UnitPrice) 計算即可.
  */
 
-select categoryID, Sum(UnitsInStock * UnitPrice)
+select categoryID as `產品類別代號`, Sum(UnitsInStock * UnitPrice) as `庫存成本`
   from products
   group by categoryID;
 
@@ -180,6 +181,8 @@ select categoryID, Sum(UnitsInStock * UnitPrice)
   from products
   group by categoryID
   having Sum(UnitsInStock * UnitPrice) > 12000
+  HAVING只能用在aggregate (合計) 情況下 ，也就是有GROUP BY的時候，
+  並且HAVING要過濾的條件，要跟GROUP BY的合計函數有關。
 
 /* 360
   請從 order details 統計各項產品銷售總和, 並且一併列出
