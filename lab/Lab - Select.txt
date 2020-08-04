@@ -159,10 +159,15 @@ SELECT COUNT(reportsto) FROM employees
 select categoryID , productID, AVG(UnitPrice)
   from products
   group by categoryID
+  只有使用
   鍵值衝突
   如果用categoryID來分配
   productID（唯一）會不知道怎麼顯示
 
+select categoryID, avg(UnitPrice)
+  from products
+  group by categoryID
+  HAVING  avg(UnitPrice) >=30
 
 /* 340
   categoryID 是產品類別的代號, 請統計各類產品(products)的庫存成本?
@@ -211,7 +216,7 @@ select ProductID, ProductName as PN, p.SupplierID, CompanyName, Phone, ContactNa
   from products p join suppliers s
   on p.SupplierID = s.SupplierID
   order by p.SupplierID
-
+鍵值連接用on
 
 /* 430
    我想列出「所有」供應商目前各自提供我們哪些產品資料的對照表,
@@ -233,6 +238,33 @@ select s.SupplierID, CompanyName, ProductID, ProductName
   order by s.SupplierID
 
 
+SELECT o.CustomerID, c.CompanyName, o.orderId
+FROM customers c join orders o 	 
+on o.CustomerID = c.CustomerID
+
+
+SELECT o.CustomerID, c.CompanyName, o.orderId
+FROM customers c join orders o 	 
+on o.CustomerID = c.CustomerID
+join `order details` od on od.orderid = o.OrderID
+order by c.CustomerID
+
+
+SELECT o.CustomerID, c.CompanyName, o.orderId,p.productid,p.ProductName
+FROM customers c join orders o 	 
+on o.CustomerID = c.CustomerID
+join `order details` od on od.orderid = o.OrderID
+join products p on p.productid = od.ProductID
+order by c.CustomerID
+
+
+SELECT DISTINCT c.CustomerID, c.CompanyName, o.orderId,p.productid,p.ProductName
+FROM customers c join orders o 	 
+on o.CustomerID = c.CustomerID
+join `order details` od on od.orderid = o.OrderID
+join products p on p.productid = od.ProductID
+order by c.CustomerID, p.productid
+
 
 /* 510
   請列出「有買 23 號產品, 而且買超過 20 個」的訂單。
@@ -253,6 +285,11 @@ select EmployeeID, FirstName, LastName from Employees
       where OrderDate = (select Max(OrderDate) from Orders)
   )
 
+倒數10筆 依照日期正確排序 小到大
+SELECT * FROM
+(SELECT * FROM orders ORDER BY orderdate desc LIMIT 10)
+as T
+ORDER BY orderdate
 
 /* 530
   請列出各項產品的類別、編號、品名、單價、該類產品平均單價、
@@ -265,4 +302,11 @@ select CategoryID, ProductID, UnitPrice,
     where CategoryID = o.CategoryID) as DiffPrice
   from products as o
   order by CategoryID, ProductID
+
+  平均單價
+  select Avg(UnitPrice) from products as i 
+    where CategoryID = o.CategoryID
+  價差
+  UnitPrice - (select Avg(UnitPrice) from products as I 
+    where CategoryID = o.CategoryID)
 
