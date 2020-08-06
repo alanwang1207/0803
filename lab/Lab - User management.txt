@@ -2,16 +2,18 @@
 
 -- 請試著描述 user, db, tables_priv 等資料表的作用
 show tables;
-
+user 查看使用者資料，紀錄使用者權限
+db 各個使用者對每個資料庫的權限
+table_priv  當使用者對資料表的權限有變動時會出來紀錄
 
 -- 檢視現在的使用者清單
-select user, host, password from user;
+select user, host, authentication_string from user;
 select host, db, user, select_priv, insert_priv, update_priv from db;
 select host, db, user, table_name, table_priv from tables_priv;
 
 
 -- 新增一個新的使用者:
-grant usage on *.* to carl@'%' identified by 'Pa$$w0rd';
+grant usage on *.* to carl@'%' identified by '1111';
 
 
 -- 各個記錄安全權限的資料表有何變化?
@@ -20,7 +22,7 @@ select host, db, user, select_priv, insert_priv, update_priv from db;
 select host, db, user, table_name, table_priv from tables_priv;
 
 -- 新增一個新的使用者:
-create user jeter identified by 'Pa$$w0rd';
+create user jeter identified by '1111';
 
 
 -- 各個記錄安全權限的資料表有何變化?
@@ -32,7 +34,7 @@ select host, db, user, table_name, table_priv from tables_priv;
 -- 下列指令可否成功執行:
 grant usage on *.* to jeremy identified by 'Pa$$w0rd';
 grant usage on *.* to white;
-grant usage on *.* to Carl@'%' identified by 'Pa$$w0rd';
+grant usage on *.* to Carl@'%' identified by 'Pa$$w0rd'; 使用者有分大小寫
 
 
 -- 另外開一個"命名提示字元", 以剛才的 carl 登入
